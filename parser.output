@@ -1,0 +1,567 @@
+Grammar
+
+    0 $accept: debut $end
+
+    1 debut: script
+
+    2 script: script commande
+    3       | /* empty */
+
+    4 commande: TK_FUNC TK_IDENT TK_COLON expr TK_SEP
+    5         | TK_PRINT printFormat_Optional TK_IDENT string_optional TK_SEP
+    6         | TK_EVAL TK_IDENT number TK_SEP
+    7         | TK_SIMPLIFY TK_IDENT ident_optional TK_SEP
+    8         | TK_PLOT ident_list minMax_optional TK_SEP
+
+    9 number: TK_REEL
+   10       | TK_INTEGER
+
+   11 minMax_optional: TK_INTEGER TK_INTEGER
+   12                | /* empty */
+
+   13 ident_list: ident_list TK_IDENT
+   14           | TK_IDENT
+
+   15 ident_optional: TK_COLON TK_IDENT
+   16               | /* empty */
+
+   17 printFormat_Optional: TK_PrintFormat
+   18                     | /* empty */
+
+   19 string_optional: TK_STRING
+   20                | /* empty */
+
+   21 expr: TK_LPAREN expr TK_RPAREN
+   22     | expr TK_MULTIPLY expr
+   23     | expr TK_PLUS expr
+   24     | TK_IDENT quoteList_optional TK_LPAREN expr TK_RPAREN
+   25     | element
+
+   26 quoteList_optional: quoteList_optional TK_QUOTE
+   27                   | /* empty */
+
+   28 element: TK_REEL
+   29        | TK_INTEGER
+   30        | TK_X
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TK_FUNC (258) 4
+TK_PRINT (259) 5
+TK_EVAL (260) 6
+TK_SIMPLIFY (261) 7
+TK_PLOT (262) 8
+TK_PrintFormat (263) 17
+TK_STRING (264) 19
+TK_IDENT (265) 4 5 6 7 13 14 15 24
+TK_REEL (266) 9 28
+TK_INTEGER (267) 10 11 29
+TK_X (268) 30
+TK_COLON (269) 4 15
+TK_QUOTE (270) 26
+TK_LPAREN (271) 21 24
+TK_RPAREN (272) 21 24
+TK_PLUS (273) 23
+TK_MULTIPLY (274) 22
+TK_SEP (275) 4 5 6 7 8
+
+
+Nonterminals, with rules where they appear
+
+$accept (21)
+    on left: 0
+debut (22)
+    on left: 1, on right: 0
+script (23)
+    on left: 2 3, on right: 1 2
+commande (24)
+    on left: 4 5 6 7 8, on right: 2
+number (25)
+    on left: 9 10, on right: 6
+minMax_optional (26)
+    on left: 11 12, on right: 8
+ident_list (27)
+    on left: 13 14, on right: 8 13
+ident_optional (28)
+    on left: 15 16, on right: 7
+printFormat_Optional (29)
+    on left: 17 18, on right: 5
+string_optional (30)
+    on left: 19 20, on right: 5
+expr (31)
+    on left: 21 22 23 24 25, on right: 4 21 22 23 24
+quoteList_optional (32)
+    on left: 26 27, on right: 24 26
+element (33)
+    on left: 28 29 30, on right: 25
+
+
+state 0
+
+    0 $accept: . debut $end
+
+    $default  reduce using rule 3 (script)
+
+    debut   go to state 1
+    script  go to state 2
+
+
+state 1
+
+    0 $accept: debut . $end
+
+    $end  shift, and go to state 3
+
+
+state 2
+
+    1 debut: script .
+    2 script: script . commande
+
+    TK_FUNC      shift, and go to state 4
+    TK_PRINT     shift, and go to state 5
+    TK_EVAL      shift, and go to state 6
+    TK_SIMPLIFY  shift, and go to state 7
+    TK_PLOT      shift, and go to state 8
+
+    $default  reduce using rule 1 (debut)
+
+    commande  go to state 9
+
+
+state 3
+
+    0 $accept: debut $end .
+
+    $default  accept
+
+
+state 4
+
+    4 commande: TK_FUNC . TK_IDENT TK_COLON expr TK_SEP
+
+    TK_IDENT  shift, and go to state 10
+
+
+state 5
+
+    5 commande: TK_PRINT . printFormat_Optional TK_IDENT string_optional TK_SEP
+
+    TK_PrintFormat  shift, and go to state 11
+
+    $default  reduce using rule 18 (printFormat_Optional)
+
+    printFormat_Optional  go to state 12
+
+
+state 6
+
+    6 commande: TK_EVAL . TK_IDENT number TK_SEP
+
+    TK_IDENT  shift, and go to state 13
+
+
+state 7
+
+    7 commande: TK_SIMPLIFY . TK_IDENT ident_optional TK_SEP
+
+    TK_IDENT  shift, and go to state 14
+
+
+state 8
+
+    8 commande: TK_PLOT . ident_list minMax_optional TK_SEP
+
+    TK_IDENT  shift, and go to state 15
+
+    ident_list  go to state 16
+
+
+state 9
+
+    2 script: script commande .
+
+    $default  reduce using rule 2 (script)
+
+
+state 10
+
+    4 commande: TK_FUNC TK_IDENT . TK_COLON expr TK_SEP
+
+    TK_COLON  shift, and go to state 17
+
+
+state 11
+
+   17 printFormat_Optional: TK_PrintFormat .
+
+    $default  reduce using rule 17 (printFormat_Optional)
+
+
+state 12
+
+    5 commande: TK_PRINT printFormat_Optional . TK_IDENT string_optional TK_SEP
+
+    TK_IDENT  shift, and go to state 18
+
+
+state 13
+
+    6 commande: TK_EVAL TK_IDENT . number TK_SEP
+
+    TK_REEL     shift, and go to state 19
+    TK_INTEGER  shift, and go to state 20
+
+    number  go to state 21
+
+
+state 14
+
+    7 commande: TK_SIMPLIFY TK_IDENT . ident_optional TK_SEP
+
+    TK_COLON  shift, and go to state 22
+
+    $default  reduce using rule 16 (ident_optional)
+
+    ident_optional  go to state 23
+
+
+state 15
+
+   14 ident_list: TK_IDENT .
+
+    $default  reduce using rule 14 (ident_list)
+
+
+state 16
+
+    8 commande: TK_PLOT ident_list . minMax_optional TK_SEP
+   13 ident_list: ident_list . TK_IDENT
+
+    TK_IDENT    shift, and go to state 24
+    TK_INTEGER  shift, and go to state 25
+
+    $default  reduce using rule 12 (minMax_optional)
+
+    minMax_optional  go to state 26
+
+
+state 17
+
+    4 commande: TK_FUNC TK_IDENT TK_COLON . expr TK_SEP
+
+    TK_IDENT    shift, and go to state 27
+    TK_REEL     shift, and go to state 28
+    TK_INTEGER  shift, and go to state 29
+    TK_X        shift, and go to state 30
+    TK_LPAREN   shift, and go to state 31
+
+    expr     go to state 32
+    element  go to state 33
+
+
+state 18
+
+    5 commande: TK_PRINT printFormat_Optional TK_IDENT . string_optional TK_SEP
+
+    TK_STRING  shift, and go to state 34
+
+    $default  reduce using rule 20 (string_optional)
+
+    string_optional  go to state 35
+
+
+state 19
+
+    9 number: TK_REEL .
+
+    $default  reduce using rule 9 (number)
+
+
+state 20
+
+   10 number: TK_INTEGER .
+
+    $default  reduce using rule 10 (number)
+
+
+state 21
+
+    6 commande: TK_EVAL TK_IDENT number . TK_SEP
+
+    TK_SEP  shift, and go to state 36
+
+
+state 22
+
+   15 ident_optional: TK_COLON . TK_IDENT
+
+    TK_IDENT  shift, and go to state 37
+
+
+state 23
+
+    7 commande: TK_SIMPLIFY TK_IDENT ident_optional . TK_SEP
+
+    TK_SEP  shift, and go to state 38
+
+
+state 24
+
+   13 ident_list: ident_list TK_IDENT .
+
+    $default  reduce using rule 13 (ident_list)
+
+
+state 25
+
+   11 minMax_optional: TK_INTEGER . TK_INTEGER
+
+    TK_INTEGER  shift, and go to state 39
+
+
+state 26
+
+    8 commande: TK_PLOT ident_list minMax_optional . TK_SEP
+
+    TK_SEP  shift, and go to state 40
+
+
+state 27
+
+   24 expr: TK_IDENT . quoteList_optional TK_LPAREN expr TK_RPAREN
+
+    $default  reduce using rule 27 (quoteList_optional)
+
+    quoteList_optional  go to state 41
+
+
+state 28
+
+   28 element: TK_REEL .
+
+    $default  reduce using rule 28 (element)
+
+
+state 29
+
+   29 element: TK_INTEGER .
+
+    $default  reduce using rule 29 (element)
+
+
+state 30
+
+   30 element: TK_X .
+
+    $default  reduce using rule 30 (element)
+
+
+state 31
+
+   21 expr: TK_LPAREN . expr TK_RPAREN
+
+    TK_IDENT    shift, and go to state 27
+    TK_REEL     shift, and go to state 28
+    TK_INTEGER  shift, and go to state 29
+    TK_X        shift, and go to state 30
+    TK_LPAREN   shift, and go to state 31
+
+    expr     go to state 42
+    element  go to state 33
+
+
+state 32
+
+    4 commande: TK_FUNC TK_IDENT TK_COLON expr . TK_SEP
+   22 expr: expr . TK_MULTIPLY expr
+   23     | expr . TK_PLUS expr
+
+    TK_PLUS      shift, and go to state 43
+    TK_MULTIPLY  shift, and go to state 44
+    TK_SEP       shift, and go to state 45
+
+
+state 33
+
+   25 expr: element .
+
+    $default  reduce using rule 25 (expr)
+
+
+state 34
+
+   19 string_optional: TK_STRING .
+
+    $default  reduce using rule 19 (string_optional)
+
+
+state 35
+
+    5 commande: TK_PRINT printFormat_Optional TK_IDENT string_optional . TK_SEP
+
+    TK_SEP  shift, and go to state 46
+
+
+state 36
+
+    6 commande: TK_EVAL TK_IDENT number TK_SEP .
+
+    $default  reduce using rule 6 (commande)
+
+
+state 37
+
+   15 ident_optional: TK_COLON TK_IDENT .
+
+    $default  reduce using rule 15 (ident_optional)
+
+
+state 38
+
+    7 commande: TK_SIMPLIFY TK_IDENT ident_optional TK_SEP .
+
+    $default  reduce using rule 7 (commande)
+
+
+state 39
+
+   11 minMax_optional: TK_INTEGER TK_INTEGER .
+
+    $default  reduce using rule 11 (minMax_optional)
+
+
+state 40
+
+    8 commande: TK_PLOT ident_list minMax_optional TK_SEP .
+
+    $default  reduce using rule 8 (commande)
+
+
+state 41
+
+   24 expr: TK_IDENT quoteList_optional . TK_LPAREN expr TK_RPAREN
+   26 quoteList_optional: quoteList_optional . TK_QUOTE
+
+    TK_QUOTE   shift, and go to state 47
+    TK_LPAREN  shift, and go to state 48
+
+
+state 42
+
+   21 expr: TK_LPAREN expr . TK_RPAREN
+   22     | expr . TK_MULTIPLY expr
+   23     | expr . TK_PLUS expr
+
+    TK_RPAREN    shift, and go to state 49
+    TK_PLUS      shift, and go to state 43
+    TK_MULTIPLY  shift, and go to state 44
+
+
+state 43
+
+   23 expr: expr TK_PLUS . expr
+
+    TK_IDENT    shift, and go to state 27
+    TK_REEL     shift, and go to state 28
+    TK_INTEGER  shift, and go to state 29
+    TK_X        shift, and go to state 30
+    TK_LPAREN   shift, and go to state 31
+
+    expr     go to state 50
+    element  go to state 33
+
+
+state 44
+
+   22 expr: expr TK_MULTIPLY . expr
+
+    TK_IDENT    shift, and go to state 27
+    TK_REEL     shift, and go to state 28
+    TK_INTEGER  shift, and go to state 29
+    TK_X        shift, and go to state 30
+    TK_LPAREN   shift, and go to state 31
+
+    expr     go to state 51
+    element  go to state 33
+
+
+state 45
+
+    4 commande: TK_FUNC TK_IDENT TK_COLON expr TK_SEP .
+
+    $default  reduce using rule 4 (commande)
+
+
+state 46
+
+    5 commande: TK_PRINT printFormat_Optional TK_IDENT string_optional TK_SEP .
+
+    $default  reduce using rule 5 (commande)
+
+
+state 47
+
+   26 quoteList_optional: quoteList_optional TK_QUOTE .
+
+    $default  reduce using rule 26 (quoteList_optional)
+
+
+state 48
+
+   24 expr: TK_IDENT quoteList_optional TK_LPAREN . expr TK_RPAREN
+
+    TK_IDENT    shift, and go to state 27
+    TK_REEL     shift, and go to state 28
+    TK_INTEGER  shift, and go to state 29
+    TK_X        shift, and go to state 30
+    TK_LPAREN   shift, and go to state 31
+
+    expr     go to state 52
+    element  go to state 33
+
+
+state 49
+
+   21 expr: TK_LPAREN expr TK_RPAREN .
+
+    $default  reduce using rule 21 (expr)
+
+
+state 50
+
+   22 expr: expr . TK_MULTIPLY expr
+   23     | expr . TK_PLUS expr
+   23     | expr TK_PLUS expr .
+
+    $default  reduce using rule 23 (expr)
+
+
+state 51
+
+   22 expr: expr . TK_MULTIPLY expr
+   22     | expr TK_MULTIPLY expr .
+   23     | expr . TK_PLUS expr
+
+    $default  reduce using rule 22 (expr)
+
+
+state 52
+
+   22 expr: expr . TK_MULTIPLY expr
+   23     | expr . TK_PLUS expr
+   24     | TK_IDENT quoteList_optional TK_LPAREN expr . TK_RPAREN
+
+    TK_RPAREN    shift, and go to state 53
+    TK_PLUS      shift, and go to state 43
+    TK_MULTIPLY  shift, and go to state 44
+
+
+state 53
+
+   24 expr: TK_IDENT quoteList_optional TK_LPAREN expr TK_RPAREN .
+
+    $default  reduce using rule 24 (expr)

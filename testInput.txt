@@ -1,0 +1,92 @@
+
+func F1 : (x+1)*(x+2)
+
+simplify F1 : F2
+
+func F3 : x * F2(x)
+
+
+simplify F3 : F4
+
+print F4
+
+func F1 : 4
+
+func F3 : x + F2(x)
+
+func F2 : F1'(x)
+
+func F1 : 3*(x+2)
+
+func F1 : x*(x+2)
+
+func F1 : x+2
+
+func F2 : x * F1(x)
+
+simplify F2 : F3
+
+print F3
+
+######################################
+
+func F1 : (x+2.5)*(-1*x+3)
+
+func F2 : 2*x*x+3*x+-1
+
+func F3 : F1(x*x) + F1''(1 + F2'(x+2))
+
+func F4 : F1'(x)
+
+simplify F4
+
+func F5 : F1''(1 + F2'(x+2))
+
+simplify F5
+
+func F6 : F1''(1 + x)
+
+simplify F6
+
+func F7 : F2'(x+2)
+
+simplify F7
+
+print F5
+
+print F1
+
+print /e F1
+
+print F1 "toto.dot"
+
+print /a F1 "somefile"
+
+print /p F1234 "somefile"
+
+eval F1 320.312
+
+eval F1 -0.654
+
+simplify F1 : F11
+
+simplify F2 : F22
+
+simplify F3 : F33
+
+simplify F4 : F44
+
+simplify F14 : F123
+
+plot F1
+
+plot F1 -10 10
+
+plot F1 F2 F3
+
+plot F4 -5 5
+
+plot F1 F2 F3452 -635461.321 621651.321
+
+plot asdf -635461.321 621651.321
+
